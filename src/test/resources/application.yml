@@ -5,4 +5,4 @@ camel:
     servlet:
       mapping:
         enabled: true
-        context-path: /camel-rest-3scale/*
+        context-path: /*

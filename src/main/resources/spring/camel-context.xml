@@ -1,50 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
-
-    <camelContext xmlns="http://camel.apache.org/schema/spring">
-
-        <restConfiguration component="servlet" contextPath="/camel-rest-3scale" apiContextPath="/openapi.json" scheme="http">
-            <apiProperty key="api.title" value="User Service"/>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
+    <camelContext id="camelContext-ed9b032c-7037-4b6f-9a8f-28083d2d30cc" xmlns="http://camel.apache.org/schema/spring">
+        <restConfiguration apiContextPath="/openapi.json"
+            component="servlet" contextPath="/api" scheme="http">
+            <apiProperty key="api.title" value="Greeting Service"/>
             <apiProperty key="api.version" value="1"/>
             <apiProperty key="api.specification.contentType.json" value="application/vnd.oai.openapi+json;version=2.0"/>
             <apiProperty key="api.specification.contentType.yaml" value="application/vnd.oai.openapi;version=2.0"/>
         </restConfiguration>
-        <!-- Override the default Camel Swagger doc with custom OpenAPI doc -->
-        <!--
-        <rest path="/" enableCORS="true">
-            <get id="openapi.json" produces="application/json" uri="openapi.json">
-                <description>Gets the openapi document for this service</description>
-                <route>
-                    <setHeader headerName="Exchange.CONTENT_TYPE">
-                        <constant>application/vnd.oai.openapi+json</constant>
-                    </setHeader>
-                    <setBody>
-                        <simple>resource:classpath:openapi.json</simple>
-                    </setBody>
-                </route>
+        
+        <!-- Greet service -->
+        <rest bindingMode="json" enableCORS="true"
+            id="rest-72d29697-dc6a-4807-bc6a-923b3c5a2678" path="/hello">
+            <description id="description-ef4bc8c8-dd41-4125-a24a-8fad4eb703a7">Greet Service</description>
+            <get id="list" outType="java.org.pegadaian.dev.Greeting"
+                produces="application/json" uri="{name}">
+                <description>Greet user that used this service</description>
+                <responseMessage code="200" message="All users successfully returned"/>
+                <to uri="bean:greetService?method=greetUser"/>
             </get>
         </rest>
-        -->
-
-        <!-- User service -->
-        <rest path="/users" bindingMode="json" enableCORS="true">
-            <description>Users Service</description>
-            <post id="greet" consumes="application/json" produces="application/text" uri="greet" type="io.fabric8.quickstarts.camel.User" outType="java.lang.String">
-                <description>Greet this Service with User credentials</description>
-                <responseMessage message="User added" code="200"/>
-                <to uri="bean:userService?method=greetUser"/>
-            </post>
-            <get id="list" produces="application/json" uri="list" outType="io.fabric8.quickstarts.camel.User[]">
-                <description>List users that used this service</description>
-                <responseMessage message="All users successfully returned" code="200"/>
-                <to uri="bean:userService?method=findUsers"/>
-            </get>
-        </rest>
-
     </camelContext>
-
 </beans>

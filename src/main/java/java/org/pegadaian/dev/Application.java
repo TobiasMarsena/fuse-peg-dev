@@ -13,29 +13,19 @@
  * implied.  See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package io.fabric8.quickstarts.camel;
+package java.org.pegadaian.dev;
 
-import java.util.Collection;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.ImportResource;
 
-/**
- * Service interface for managing users.
- * 
- */
-public interface UserService {
+@SpringBootApplication
+@ImportResource({"classpath:spring/camel-context.xml"})
+public class Application extends SpringBootServletInitializer {
 
-    /**
-     * Find all users
-     *
-     * @return a collection of all users
-     */
-    Collection<User> findUsers();
-
-    /**
-     * Greet the given user.
-     *
-     * @param user
-     *            the user
-     */
-    String greetUser(User user);
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
 }

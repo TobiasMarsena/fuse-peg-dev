@@ -13,28 +13,22 @@
  * implied.  See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package io.fabric8.quickstarts.camel;
+package java.org.pegadaian.dev;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.apache.camel.Exchange;
 
-import org.springframework.stereotype.Service;
+/**
+ * Service interface for managing users.
+ * 
+ */
+public interface GreetService {
 
-@Service("userService")
-public class UserServiceImpl implements UserService {
-
-    private final List<User> users = new ArrayList<>();
-
-    @Override
-    public Collection<User> findUsers() {
-        return users;
-    }
-
-    @Override
-    public String greetUser(User user) {
-        users.add(user);
-        return "Hello " + user.getName();
-    }
+    /**
+     * Greet the given user.
+     *
+     * @param exchange
+     *            Camel Exchange
+     */
+    Greeting greetUser(Exchange exchange);
 
 }

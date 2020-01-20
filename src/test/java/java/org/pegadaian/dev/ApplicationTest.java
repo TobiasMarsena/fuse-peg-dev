@@ -13,8 +13,9 @@
  * implied.  See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package io.fabric8.quickstarts.camel;
+package java.org.pegadaian.dev;
 
+import java.org.pegadaian.dev.Greeting;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
@@ -45,17 +46,17 @@ public class ApplicationTest {
     @Test
     public void newOrderTest() {
         // Register a new User
-        final User testUser = new User("appId", "appKey", "Test");
+        final Greeting testUser = new Greeting("appId", "appKey", "Test");
         ResponseEntity<String> userResponse = restTemplate.postForEntity("/camel-rest-3scale/users/greet", testUser, String.class);
         assertThat(userResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         String greeting = userResponse.getBody();
         assertThat(greeting).isEqualTo("\"Hello Test\"");
 
         // List Users
-        ResponseEntity<List<User>> usersResponse = restTemplate.exchange("/camel-rest-3scale/users/list",
-            HttpMethod.GET, null, new ParameterizedTypeReference<List<User>>(){});
+        ResponseEntity<List<Greeting>> usersResponse = restTemplate.exchange("/camel-rest-3scale/users/list",
+            HttpMethod.GET, null, new ParameterizedTypeReference<List<Greeting>>(){});
         assertThat(usersResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        List<User> users = usersResponse.getBody();
+        List<Greeting> users = usersResponse.getBody();
         assertThat(users).hasSize(1);
         assertThat(users.get(0).getName()).isEqualTo("Test");
     }

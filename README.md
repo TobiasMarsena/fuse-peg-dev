@@ -35,8 +35,7 @@ Alternatively, you can run the application locally using the executable JAR prod
 
 You can then access the REST API directly from your Web browser, e.g.:
 
-- <http://localhost:8080/camel-rest-3scale/users/greet>
-- <http://localhost:8080/camel-rest-3scale/users/list>
+- <http://localhost:8080/api/hello/{name}>
 
 ### Running the example in Kubernetes / OpenShift
 
@@ -72,26 +71,17 @@ You can also use the Fabric8 [Web console](http://fabric8.io/guide/console.html)
 
 ### Accessing the REST service
 
-When the example is running, a REST service is available to list users that have called this service. The user information comes from 3scale extensions to autofill API keys. 
+The actual endpoint is using the _context-path_ `api/hello` and the REST service provides two services:
 
-* `"x-data-threescale-name": "app_ids"` for the parameter that represents the application ID.
-* `"x-data-threescale-name": "app_keys"` or `"x-data-threescale-name": "user_keys"` for the parameter that represents the application or user key.
-
-Notice: As it depends on your OpenShift setup, the hostname (route) might vary. Verify with `oc get routes` which hostname is valid for you. Add the `-Dfabric8.deploy.createExternalUrls=true` option to your Maven commands if you want it to deploy a Route configuration for the service.
-
-The actual endpoint is using the _context-path_ `camel-rest-3scale/users` and the REST service provides two services:
-
-- `users/greet`: to use 3scale API keys to add a user to this service's list of calling users
-- `users/list`: to list all users that have called the service
+- `hello/{name}`: to get greeting based on name given in the path parameter
 
 You can then access these services from your Web browser, e.g.:
 
-- <http://qs-camel-rest-3scale.vagrant.f8/camel-rest-3scale/users/greet>
-- <http://qs-camel-rest-3scale.vagrant.f8/camel-rest-3scale/users/list>
+- <http://qs-camel-rest-3scale.vagrant.f8/api/hello/{name}>
 
 ### Swagger API
 
-The example provides API documentation of the service using Swagger using the _context-path_ `camel-rest-3scale/openapi.json`. You can access the API documentation from your Web browser at <http://qs-camel-rest-3scale.vagrant.f8/camel-rest-3scale/openapi.json>.
+The example provides API documentation of the service using Swagger using the _context-path_ `/openapi.json`. You can access the API documentation from your Web browser at <http://qs-camel-rest-3scale.vagrant.f8/openapi.json>.
 
 ### More details
 

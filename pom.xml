@@ -20,12 +20,12 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.fabric8.quickstarts</groupId>
-  <artifactId>spring-boot-camel-rest-3scale</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <groupId>java.org.pegadaian.dev</groupId>
+  <artifactId>fuse-pegadaian-dev-3scale</artifactId>
+  <version>1.0</version>
 
-  <name>Fabric8 :: Quickstarts :: Spring-Boot :: Camel REST 3scale</name>
-  <description>Spring Boot example running a Camel REST route exporting 3scale Service Metadata</description>
+  <name>Fuse Pegadaian Dev 3scale</name>
+  <description>Fuse Service exposing "Hello, Developer" API to 3Scale</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -13,19 +13,24 @@
  * implied.  See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package io.fabric8.quickstarts.camel;
+package java.org.pegadaian.dev;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ImportResource;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-@SpringBootApplication
-@ImportResource({"classpath:spring/camel-context.xml"})
-public class Application extends SpringBootServletInitializer {
+import org.apache.camel.Exchange;
+import org.springframework.stereotype.Service;
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+@Service("userService")
+public class GreetServiceImpl implements GreetService {
+
+    @Override
+    public Greeting greetUser(Exchange exchange) {
+    	Greeting greeting = new Greeting();
+    	greeting.setRegard("Hello " + exchange.getIn().getHeader("name"));
+    	greeting.setDate(java.time.LocalDateTime.now().toString());
+        return greeting;
     }
 
 }

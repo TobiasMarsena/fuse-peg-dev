@@ -6,7 +6,7 @@ camel:
     servlet:
       mapping:
         enabled: true
-        context-path: /camel-rest-3scale/*
+        context-path: /*
 
 # Binding health checks to a different port
 management:
