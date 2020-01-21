@@ -12,7 +12,7 @@
         <!-- Greet service -->
         <rest bindingMode="json" enableCORS="true"
             id="rest-72d29697-dc6a-4807-bc6a-923b3c5a2678" path="/hello">
-            <description id="description-ef4bc8c8-dd41-4125-a24a-8fad4eb703a7">Greet Service</description>
+            <description>Greet Service</description>
             <get id="list" outType="java.org.pegadaian.dev.Greeting"
                 produces="application/json" uri="{name}">
                 <description>Greet user that used this service</description>
