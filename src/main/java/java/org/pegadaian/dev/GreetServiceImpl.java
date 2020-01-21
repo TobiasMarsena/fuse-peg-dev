@@ -15,14 +15,10 @@
  */
 package java.org.pegadaian.dev;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Service;
 
-@Service("userService")
+@Service("greetService")
 public class GreetServiceImpl implements GreetService {
 
     @Override

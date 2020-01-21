@@ -49,8 +49,8 @@ public class Greeting {
         return regard;
     }
 
-    public void setRegard(String name) {
-        this.regard = name;
+    public void setRegard(String regard) {
+        this.regard = regard;
     }
     
     public String getDate() {

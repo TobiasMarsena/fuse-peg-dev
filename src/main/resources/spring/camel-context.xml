@@ -9,7 +9,6 @@
             <apiProperty key="api.specification.contentType.json" value="application/vnd.oai.openapi+json;version=2.0"/>
             <apiProperty key="api.specification.contentType.yaml" value="application/vnd.oai.openapi;version=2.0"/>
         </restConfiguration>
-        
         <!-- Greet service -->
         <rest bindingMode="json" enableCORS="true"
             id="rest-72d29697-dc6a-4807-bc6a-923b3c5a2678" path="/hello">
