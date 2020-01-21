@@ -20,7 +20,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>java.org.pegadaian.dev</groupId>
+  <groupId>org.pegadaian.dev</groupId>
   <artifactId>fuse-pegadaian-dev-3scale</artifactId>
   <version>1.0</version>
 

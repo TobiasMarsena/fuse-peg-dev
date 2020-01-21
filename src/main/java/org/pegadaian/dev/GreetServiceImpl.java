@@ -13,7 +13,7 @@
  * implied.  See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package java.org.pegadaian.dev;
+package org.pegadaian.dev;
 
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Service;
