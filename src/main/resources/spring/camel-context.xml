@@ -32,7 +32,7 @@
             	<responseMessage code="200" message="All cache successfully returned"/>
             	<to uri="direct:getCacheGreeting"/>	
            	</get>
-           	<put id="putCache" consumes="application/json" uri="/cache">
+           	<get id="putCache" consumes="application/json" uri="/cache/{name}">
            		<description>Put cache data</description>
            		<responseMessage code="200" message="Data successfully cached"/>
            		<to uri="direct:putCache"/>
@@ -40,6 +40,7 @@
         </rest>
         <route id="put-cache">
         	<from uri="direct:putCache"/>
+        	<to uri="bean:greetService?method=greetUser"/>
         	<log message="From body >>>>> ${body}"/>
         </route>
         <!-- Insert data to cache route -->
