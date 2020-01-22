@@ -42,6 +42,7 @@
         	<from uri="direct:putCache"/>
         	<to uri="bean:greetService?method=greetUser"/>
         	<log message="From body >>>>> ${body}"/>
+        	<to uri="direct:putCacheGreeting"/>
         </route>
         <!-- Insert data to cache route -->
         <route id="put-cache-greeting">
