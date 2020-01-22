@@ -63,6 +63,7 @@
             <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader4">
                 <constant>5</constant>
             </setHeader>
+            <log message = "Sending ${body} >>>> to cache"/>
             <to id="_to1" uri="infinispan://{{jdg.url}}"/>
             <unmarshal id="_unmarshal1" ref="greeting"/>
             <log id="_log1" message="Success save to cache jboss data grid: ${body}"/>
