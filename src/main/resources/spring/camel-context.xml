@@ -2,6 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
     <camelContext id="camelContext-ed9b032c-7037-4b6f-9a8f-28083d2d30cc" xmlns="http://camel.apache.org/schema/spring">
+        <dataFormats>
+            <json allowJmsType="true" allowUnmarshallType="true"
+                contentTypeHeader="false"
+                enableJaxbAnnotationModule="false" id="greeting"
+                library="Jackson" prettyPrint="false"
+                useDefaultObjectMapper="true" useList="true"/>
+        </dataFormats>
         <restConfiguration apiContextPath="/openapi.json"
             component="servlet" contextPath="/api" scheme="http">
             <apiProperty key="api.title" value="Greeting Service"/>
@@ -12,13 +19,73 @@
         <!-- Greet service -->
         <rest bindingMode="json" enableCORS="true"
             id="rest-72d29697-dc6a-4807-bc6a-923b3c5a2678" path="/hello">
-            <description>Greet Service</description>
+            <description id="description-e26d9150-203f-4aef-96ba-71ffbd097206">Greet Service</description>
             <get id="list" outType="org.pegadaian.dev.Greeting"
                 produces="application/json" uri="/{name}">
                 <description>Greet user that used this service</description>
                 <responseMessage code="200" message="All users successfully returned"/>
                 <to uri="bean:greetService?method=greetUser"/>
             </get>
+            <get id="cache" outType="org.pegadaian.dev.Greeting[]"
+            	produces="application/json" uri="/cache">
+            	<description>Return all cache data</description>
+            	<responseMessage code="200" message="All cache successfully returned"/>
+            	<to uri="direct:getCacheGreeting"/>	
+           	</get>
+           	<put id="putCache" uri="/cache">
+           		<description>Put cache data</description>
+           		<responseMessage code="200" message="Data successfully cached"/>
+           		<to uri="direct:putCache"/>
+           	</put>
         </rest>
+        <route id="put-cache">
+        	<from uri="direct:putCache"/>
+        	<log message="From body >>>>> ${body}"/>
+        </route>
+        <!-- Insert data to cache route -->
+        <route id="put-cache-greeting">
+            <from id="_from1" uri="direct:putCacheGreeting"/>
+            <marshal id="_marshal1">
+                <json library="Jackson"/>
+            </marshal>
+            <convertBodyTo id="_convertBodyTo1" type="java.lang.String"/>
+            <setHeader headerName="CamelInfinispanOperation" id="_setHeader1">
+                <constant>CamelInfinispanOperationPut</constant>
+            </setHeader>
+            <setHeader headerName="CamelInfinispanValue" id="_setHeader2">
+                <simple>${body}</simple>
+            </setHeader>
+            <setHeader headerName="CamelInfinispanKey" id="_setHeader3">
+                <constant>GreetNames</constant>
+            </setHeader>
+            <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader4">
+                <constant>5</constant>
+            </setHeader>
+            <to id="_to1" uri="infinispan://{{jdg.url}}"/>
+            <unmarshal id="_unmarshal1" ref="greeting"/>
+            <log id="_log1" message="Success save to cache jboss data grid: ${body}"/>
+        </route>
+        <!-- Get cache route -->
+        <route id="get-cache-greeting">
+            <from id="_from2" uri="direct:getCacheGreeting"/>
+            <setHeader headerName="CamelInfinispanOperation" id="_setHeader5">
+                <constant>CamelInfinispanOperationGet</constant>
+            </setHeader>
+            <setHeader headerName="CamelInfinispanKey" id="_setHeader6">
+                <constant>GreetNames</constant>
+            </setHeader>
+            <to id="_to2" uri="infinispan://{{jdg.url}}"/>
+            <setBody id="setResultBody">
+                <simple>${header.CamelInfinispanOperationResult}</simple>
+            </setBody>
+            <choice id="_choice1">
+                <when id="_when1">
+                    <simple>${${header.CamelInfinispanOperationResult}} != null</simple>
+                    <convertBodyTo id="_convertBodyTo2" type="java.lang.String"/>
+                    <unmarshal id="_unmarshal2" ref="greeting"/>
+                    <log id="_log2" message="Get cache success >>> ${body}"/>
+                </when>
+            </choice>
+        </route>
     </camelContext>
 </beans>
