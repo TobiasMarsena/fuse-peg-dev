@@ -36,7 +36,7 @@
            		<description>Put cache data</description>
            		<responseMessage code="200" message="Data successfully cached"/>
            		<to uri="direct:putCache"/>
-           	</put>
+           	</get>
         </rest>
         <route id="put-cache">
         	<from uri="direct:putCache"/>
