@@ -88,6 +88,30 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-swagger-java-starter</artifactId>
     </dependency>
+    <!-- Data Grid -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-jackson</artifactId>
+      </dependency>
+    <dependency>
+    	<groupId>org.apache.camel</groupId>
+    	<artifactId>camel-jbossdatagrid</artifactId>
+    	<version>6.5.1.Final-redhat-1</version>
+    	<exclusions>
+      	<exclusion>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-embedded</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-query-dsl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-commons</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
     <!-- testing -->
     <dependency>
