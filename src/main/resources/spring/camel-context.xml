@@ -41,7 +41,6 @@
         <route id="put-cache">
             <from id="_from3" uri="direct:putCache"/>
             <to id="_to3" uri="bean:greetService?method=greetUser"/>
-            <log id="_log3" message="From body >>>>> ${body}"/>
             <to id="_to4" uri="direct:putCacheGreeting"/>
         </route>
         <!-- Insert data to cache route -->
@@ -54,11 +53,9 @@
             <setHeader headerName="CamelInfinispanOperation" id="_setHeader1">
                 <constant>CamelInfinispanOperationPut</constant>
             </setHeader>
-            <log message="Body to cache >>>> ${body}"/>
             <setHeader headerName="CamelInfinispanValue" id="_setHeader2">
                 <simple>${body}</simple>
             </setHeader>
-            <log message="Saved value in header >>> ${header.CamelInfinispanValue}"/>
             <setHeader headerName="CamelInfinispanKey" id="_setHeader3">
                 <constant>GreetNames</constant>
             </setHeader>
