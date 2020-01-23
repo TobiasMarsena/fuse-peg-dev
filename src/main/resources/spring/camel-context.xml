@@ -66,7 +66,7 @@
                 <constant>5</constant>
             </setHeader>
             <log id="_log4" message="Sending ${body} >>>> to cache"/>
-            <to id="_to1" uri="infinispan://https://datagrid-hotrod-middleware.apps.ocp-jkt.pegadaian.co.id/?cacheName=pegadaian-cache"/>
+            <to id="_to1" uri="infinispan://datagrid-hotrod-middleware.apps.ocp-jkt.pegadaian.co.id?cacheName=pegadaian-cache"/>
             <unmarshal id="_unmarshal1" ref="greeting"/>
             <log id="_log1" message="Success save to cache jboss data grid: ${body}"/>
         </route>
