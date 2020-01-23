@@ -58,7 +58,7 @@
             <setHeader headerName="CamelInfinispanValue" id="_setHeader2">
                 <simple>${body}</simple>
             </setHeader>
-            <log message="Saved value in header >>> ${header.CamelInfinispanValue"/>
+            <log message="Saved value in header >>> ${header.CamelInfinispanValue}"/>
             <setHeader headerName="CamelInfinispanKey" id="_setHeader3">
                 <constant>GreetNames</constant>
             </setHeader>
