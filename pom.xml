@@ -54,10 +54,14 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson</artifactId>
       </dependency>
-    <dependency>
-    	<groupId>org.apache.camel</groupId>
-    	<artifactId>camel-jbossdatagrid</artifactId>
-    	<version>6.5.1.Final-redhat-1</version>
+<!--     <dependency> -->
+<!--     	<groupId>org.apache.camel</groupId> -->
+<!--     	<artifactId>camel-jbossdatagrid</artifactId> -->
+<!--     	<version>6.5.1.Final-redhat-1</version> -->
+	<dependency>
+	    <groupId>org.apache.camel</groupId>
+	    <artifactId>camel-jbossdatagrid</artifactId>
+	    <version>7.2.0.Final-redhat-9</version>
     	<exclusions>
       	<exclusion>
           <groupId>org.infinispan</groupId>
