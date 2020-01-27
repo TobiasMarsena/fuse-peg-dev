@@ -10,6 +10,11 @@ public class CacheRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 		
+		onException(Exception.class)
+			.handled(true)
+			.maximumRedeliveries(2)
+		;
+		
 		from("direct:putCache")
 			.id("put-cache")
 			.bean("greetService", "greetUser")
