@@ -30,6 +30,20 @@ public class CacheRoute extends RouteBuilder {
 			.unmarshal().json(JsonLibrary.Jackson)
 		;
 		
+		from("direct:getCacheGreeting")
+			.setHeader("CamelInfinispanOperation", constant("CamelInfinispanOperationGet"))
+			.setHeader("CamelInfinispanKey", constant("Greeting"))
+			.to("infinispan:{{jdg.url}}")
+			.setBody(header("CamelInfinispanOperationResult"))
+			.choice()
+				.when(header("CamelInfinispanOperationResult").isNotNull())
+					.convertBodyTo(String.class)
+					.unmarshal().json(JsonLibrary.Jackson)
+					.log("Get cache success >>> " + body())
+				.otherwise()
+					.log("Get nothing")
+			.endChoice()
+		;
 	}
 
 	
