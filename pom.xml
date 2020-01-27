@@ -38,12 +38,21 @@
       <artifactId>camel-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
+    	<groupId>org.apache.camel</groupId>
+    	<artifactId>camel-jdbc</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.camel</groupId>
+    	<artifactId>camel-sql</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-swagger-java-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-spark-rest</artifactId>
+      <artifactId>camel-restlet</artifactId>
+      <version>2.22.2</version><!--$NO-MVN-MAN-VER$-->
     </dependency>
     <dependency>
 	    <groupId>org.apache.camel</groupId>
@@ -72,6 +81,15 @@
           <artifactId>infinispan-commons</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <!-- DB Connectors -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>org.postgresql</groupId>
+    	<artifactId>postgresql</artifactId>
     </dependency>
   </dependencies>
   <repositories>

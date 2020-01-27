@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
-    <camelContext id="camelContext-ed9b032c-7037-4b6f-9a8f-28083d2d30cc" xmlns="http://camel.apache.org/schema/spring">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans      http://www.springframework.org/schema/beans/spring-beans.xsd                  http://camel.apache.org/schema/spring                 http://camel.apache.org/schema/spring/camel-spring.xsd">
+    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
         <dataFormats>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
@@ -10,7 +10,7 @@
                 useDefaultObjectMapper="true" useList="true"/>
         </dataFormats>
         <restConfiguration apiContextPath="/openapi.json"
-            component="spark-rest" contextPath="/api" port="8080" scheme="http">
+            component="restlet" contextPath="/api" port="8080" scheme="http">
             <apiProperty key="api.title" value="Greeting Service"/>
             <apiProperty key="api.version" value="1"/>
             <apiProperty key="api.specification.contentType.json" value="application/vnd.oai.openapi+json;version=2.0"/>
@@ -44,28 +44,28 @@
             <to id="_to4" uri="direct:putCacheGreeting"/>
         </route>
         <!-- Insert data to cache route -->
-        <route id="put-cache-greeting">
-            <from id="_from1" uri="direct:putCacheGreeting"/>
+        <route id="customer-data-to-cache">
+            <from id="_from4" uri="direct:putCacheGreeting"/>
             <marshal id="_marshal1">
                 <json library="Jackson"/>
             </marshal>
             <convertBodyTo id="_convertBodyTo1" type="java.lang.String"/>
-            <setHeader headerName="CamelInfinispanOperation" id="_setHeader1">
+            <setHeader headerName="CamelInfinispanOperation" id="_setHeader2">
                 <constant>CamelInfinispanOperationPut</constant>
             </setHeader>
-            <setHeader headerName="CamelInfinispanValue" id="_setHeader2">
+            <setHeader headerName="CamelInfinispanValue" id="_setHeader6">
                 <simple>${body}</simple>
             </setHeader>
-            <setHeader headerName="CamelInfinispanKey" id="_setHeader3">
-                <constant>GreetNames</constant>
+            <setHeader headerName="CamelInfinispanKey" id="_setHeader7">
+                <constant>CustomerComplete</constant>
             </setHeader>
-            <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader4">
+            <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader8">
                 <constant>5</constant>
             </setHeader>
-            <log id="_log4" message="Sending ${body} >>>> to cache"/>
-            <to id="_to1" uri="infinispan:{{jdg.url}}"/>
+            <log message="Sending body >>>>> ${body} >>>>> to cache"/>
+            <to id="_to3" uri="infinispan://{{jdg.url}}"/>
             <unmarshal id="_unmarshal1" ref="greeting"/>
-            <log id="_log1" message="Success save to cache jboss data grid: ${body}"/>
+            <log id="_log4" message="Success save to cache jboss data grid: ${body}"/>
         </route>
         <!-- Get cache route -->
         <route id="get-cache-greeting">
