@@ -35,7 +35,7 @@ public class Greeting {
     private String regard;
     @ApiModelProperty(value = "The current time")
     private String date;
-
+    
     public Greeting() {
     }
 
