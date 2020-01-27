@@ -11,8 +11,7 @@
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
-    <fuse.version>7.1.0.fuse-710019-redhat-00002</fuse.version>      
-    <infinispan-client.version>7.2.5.Final</infinispan-client.version>
+    <fuse.version>7.4.0.fuse-740036-redhat-00002</fuse.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -55,44 +54,24 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson</artifactId>
       </dependency>
-<!--     <dependency> -->
-<!--     	<groupId>org.apache.camel</groupId> -->
-<!--     	<artifactId>camel-jbossdatagrid</artifactId> -->
-<!--     	<version>6.5.1.Final-redhat-1</version> -->
-<!--     	<exclusions> -->
-<!--       	<exclusion> -->
-<!--           <groupId>org.infinispan</groupId> -->
-<!--           <artifactId>infinispan-embedded</artifactId> -->
-<!--         </exclusion> -->
-<!--         <exclusion> -->
-<!--           <groupId>org.infinispan</groupId> -->
-<!--           <artifactId>infinispan-query-dsl</artifactId> -->
-<!--         </exclusion> -->
-<!--         <exclusion> -->
-<!--           <groupId>org.infinispan</groupId> -->
-<!--           <artifactId>infinispan-commons</artifactId> -->
-<!--         </exclusion> -->
-<!--       </exclusions> -->
-<!--     </dependency> -->
     <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-infinispan-starter</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>org.infinispan</groupId>
-        <artifactId>infinispan-core</artifactId>
-        <version>${infinispan-client.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.infinispan</groupId>
-        <artifactId>infinispan-query-dsl</artifactId>
-        <version>${infinispan-client.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.infinispan</groupId>
-        <artifactId>infinispan-client-hotrod</artifactId>
-        <version>${infinispan-client.version}</version>
+    	<groupId>org.apache.camel</groupId>
+    	<artifactId>camel-jbossdatagrid</artifactId>
+    	<version>6.5.1.Final-redhat-1</version>
+    	<exclusions>
+      	<exclusion>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-embedded</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-query-dsl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-commons</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <repositories>

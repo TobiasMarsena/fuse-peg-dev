@@ -87,6 +87,9 @@
                     <unmarshal id="_unmarshal2" ref="greeting"/>
                     <log id="_log2" message="Get cache success >>> ${body}"/>
                 </when>
+                <otherwise>
+                	<log message="Get nothing"/>
+                </otherwise>
             </choice>
         </route>
     </camelContext>
