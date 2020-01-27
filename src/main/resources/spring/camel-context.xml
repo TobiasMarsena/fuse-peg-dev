@@ -10,7 +10,7 @@
                 useDefaultObjectMapper="true" useList="true"/>
         </dataFormats>
         <restConfiguration apiContextPath="/openapi.json"
-            component="spark-rest" port="8080" contextPath="/api" scheme="http">
+            component="spark-rest" contextPath="/api" port="8080" scheme="http">
             <apiProperty key="api.title" value="Greeting Service"/>
             <apiProperty key="api.version" value="1"/>
             <apiProperty key="api.specification.contentType.json" value="application/vnd.oai.openapi+json;version=2.0"/>
@@ -19,7 +19,7 @@
         <!-- Greet service -->
         <rest bindingMode="json" enableCORS="true"
             id="rest-72d29697-dc6a-4807-bc6a-923b3c5a2678" path="/hello">
-            <description>Greet Service</description>
+            <description id="description-d9a93ad6-d080-44c7-a72f-ee5d71fa5d92">Greet Service</description>
             <get id="list" outType="org.pegadaian.dev.Greeting"
                 produces="application/json" uri="/{name}">
                 <description>Greet user that used this service</description>

@@ -11,7 +11,7 @@
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
-    <fuse.version>7.4.0.fuse-740036-redhat-00002</fuse.version>
+    <fuse.version>7.1.0.fuse-710019-redhat-00002</fuse.version>
   </properties>
   <dependencyManagement>
     <dependencies>
