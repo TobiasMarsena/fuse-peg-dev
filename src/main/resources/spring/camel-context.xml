@@ -38,13 +38,13 @@
                 <to uri="direct:putCache"/>
             </get>
         </rest>
-        <route id="put-cache">
+        <route id="cache-greeting">
             <from id="_from1" uri="direct:putCache"/>
             <to id="_to1" uri="bean:greetService?method=greetUser"/>
             <to id="_to2" uri="direct:putCacheGreeting"/>
         </route>
         <!-- Insert data to cache route -->
-        <route id="customer-data-to-cache">
+        <route id="put-cache">
             <from id="_from2" uri="direct:putCacheGreeting"/>
             <marshal id="_marshal1">
                 <json library="Jackson"/>
@@ -64,8 +64,8 @@
             </setHeader>
             <log id="_log1" message="Sending body >>>>> ${body} >>>>> to cache"/>
             <to id="_to3" uri="infinispan://{{jdg.url}}"/>
+            <log id="_log2" message="Success save to cache jboss data grid: ${body}"/>            
             <unmarshal id="_unmarshal1" ref="greeting"/>
-            <log id="_log2" message="Success save to cache jboss data grid: ${body}"/>
         </route>
         <!-- Get cache route -->
         <route id="get-cache-greeting">
