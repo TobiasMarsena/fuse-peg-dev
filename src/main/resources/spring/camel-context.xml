@@ -38,35 +38,35 @@
                 <to uri="direct:putCache"/>
             </get>
         </rest>
-        <route id="cache-greeting">
-            <from id="_from1" uri="direct:putCache"/>
-            <to id="_to1" uri="bean:greetService?method=greetUser"/>
-            <to id="_to2" uri="direct:putCacheGreeting"/>
-        </route>
-        <!-- Insert data to cache route -->
-        <route id="put-cache">
-            <from id="_from2" uri="direct:putCacheGreeting"/>
-            <marshal id="_marshal1">
-                <json library="Jackson"/>
-            </marshal>
-            <convertBodyTo id="_convertBodyTo1" type="java.lang.String"/>
-            <setHeader headerName="CamelInfinispanOperation" id="_setHeader1">
-                <constant>CamelInfinispanOperationPut</constant>
-            </setHeader>
-            <setHeader headerName="CamelInfinispanValue" id="_setHeader2">
-                <simple>${body}</simple>
-            </setHeader>
-            <setHeader headerName="CamelInfinispanKey" id="_setHeader3">
-                <constant>CustomerComplete</constant>
-            </setHeader>
-            <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader4">
-                <constant>5</constant>
-            </setHeader>
-            <log id="_log1" message="Sending body >>>>> ${body} >>>>> to cache"/>
-            <to id="_to3" uri="infinispan://{{jdg.url}}"/>
-            <log id="_log2" message="Success save to cache jboss data grid: ${body}"/>            
-            <unmarshal id="_unmarshal1" ref="greeting"/>
-        </route>
+<!--         <route id="cache-greeting"> -->
+<!--             <from id="_from1" uri="direct:putCache"/> -->
+<!--             <to id="_to1" uri="bean:greetService?method=greetUser"/> -->
+<!--             <to id="_to2" uri="direct:putCacheGreeting"/> -->
+<!--         </route> -->
+<!--         Insert data to cache route -->
+<!--         <route id="put-cache"> -->
+<!--             <from id="_from2" uri="direct:putCacheGreeting"/> -->
+<!--             <marshal id="_marshal1"> -->
+<!--                 <json library="Jackson"/> -->
+<!--             </marshal> -->
+<!--             <convertBodyTo id="_convertBodyTo1" type="java.lang.String"/> -->
+<!--             <setHeader headerName="CamelInfinispanOperation" id="_setHeader1"> -->
+<!--                 <constant>CamelInfinispanOperationPut</constant> -->
+<!--             </setHeader> -->
+<!--             <setHeader headerName="CamelInfinispanValue" id="_setHeader2"> -->
+<!--                 <simple>${body}</simple> -->
+<!--             </setHeader> -->
+<!--             <setHeader headerName="CamelInfinispanKey" id="_setHeader3"> -->
+<!--                 <constant>CustomerComplete</constant> -->
+<!--             </setHeader> -->
+<!--             <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader4"> -->
+<!--                 <constant>5</constant> -->
+<!--             </setHeader> -->
+<!--             <log id="_log1" message="Sending body >>>>> ${body} >>>>> to cache"/> -->
+<!--             <to id="_to3" uri="infinispan://{{jdg.url}}"/> -->
+<!--             <log id="_log2" message="Success save to cache jboss data grid: ${body}"/>             -->
+<!--             <unmarshal id="_unmarshal1" ref="greeting"/> -->
+<!--         </route> -->
         <!-- Get cache route -->
         <route id="get-cache-greeting">
             <from id="_from3" uri="direct:getCacheGreeting"/>
