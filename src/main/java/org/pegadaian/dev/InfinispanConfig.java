@@ -1,28 +1,26 @@
 package org.pegadaian.dev;
 
-import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
-import org.springframework.context.annotation.Bean;
 
 public class InfinispanConfig {
-	ConfigurationBuilder clientBuilder;
 	
-	public InfinispanConfig() {
-		clientBuilder = new ConfigurationBuilder();
-		clientBuilder.addServer()
-			.host("cache-service")
-			.port(11222)
-			.security()
-				.authentication().enable()
-				.username("pegadaian")
-				.password("pegadaian")
-				.serverName("cache-service")
-		.build();
+	private InfinispanConfig() {
 	}
 	
-	@Bean("cacheManager")
-	public RemoteCacheManager newCacheManager() {
-		return new RemoteCacheManager(clientBuilder.build());
+	public static ConfigurationBuilder createConfig() {
+		ConfigurationBuilder cfg = new ConfigurationBuilder();
+		
+		cfg
+			.addServer()
+				.host("cache-service")
+				.port(11222)
+			.security().authentication()
+				.enable()
+				.username("pegadaian")
+				.password("pegadaian")
+				.serverName("cache-service");
+		
+		return cfg;
 	}
 
 }

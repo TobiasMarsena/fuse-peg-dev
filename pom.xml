@@ -59,9 +59,9 @@
       <artifactId>camel-jackson</artifactId>
       </dependency>
     <dependency>
-    	<groupId>org.apache.camel</groupId>
-    	<artifactId>camel-jbossdatagrid</artifactId>
-    	<version>7.3.2.Final-redhat-00001</version>
+    	<groupId>org.infinispan</groupId>
+    	<artifactId>infinispan-client-hotrod</artifactId>
+    	<version>10.0.1.Final</version>
     </dependency>
   </dependencies>
   <repositories>

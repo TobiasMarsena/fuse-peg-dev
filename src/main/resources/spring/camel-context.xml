@@ -26,7 +26,7 @@
                 <responseMessage code="200" message="All users successfully returned"/>
                 <to uri="bean:greetService?method=greetUser"/>
             </get>
-            <get id="cache" outType="org.pegadaian.dev.Greeting[]"
+            <get id="cache" outType="org.pegadaian.dev.Greeting"
                 produces="application/json" uri="/list/cache">
                 <description>Return all cache data</description>
                 <responseMessage code="200" message="All cache successfully returned"/>
