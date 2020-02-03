@@ -2,6 +2,7 @@ package org.pegadaian.dev;
 
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
+import org.springframework.context.annotation.Bean;
 
 public class InfinispanConfig {
 	ConfigurationBuilder clientBuilder;
@@ -19,6 +20,7 @@ public class InfinispanConfig {
 		.build();
 	}
 	
+	@Bean("cacheManager")
 	public RemoteCacheManager newCacheManager() {
 		return new RemoteCacheManager(clientBuilder.build());
 	}

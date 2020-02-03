@@ -2,10 +2,6 @@ package org.pegadaian.dev.route;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import org.infinispan.client.hotrod.RemoteCacheManager;
-import org.infinispan.client.hotrod.configuration.Configuration;
-import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
-import org.pegadaian.dev.InfinispanConfig;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,9 +9,7 @@ public class CacheRoute extends RouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
-		
-		RemoteCacheManager cacheManager = new InfinispanConfig().newCacheManager();
-		
+				
 		onException(Exception.class)
 			.handled(true)
 			.maximumRedeliveries(2)
