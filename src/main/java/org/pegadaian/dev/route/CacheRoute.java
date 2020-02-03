@@ -36,7 +36,7 @@ public class CacheRoute extends RouteBuilder {
 			.setHeader("CamelInfinispanKey", constant("Greeting"))
 			.setHeader("CamelInfinispanLifespanTime", constant("20s"))
 			.log("Sending body >>>>> ${body} >>>>> to cache")
-			.to("infinispan:pegadaian-cache?cacheContainer=#cacheManager")
+			.to("infinispan:cache-service?cacheContainer=#cacheManager&cacheName=pegadaian-cache")
 			.log("Success save to cache jboss data grid: ${body}")
 			.unmarshal().json(JsonLibrary.Jackson)
 		;
@@ -44,7 +44,7 @@ public class CacheRoute extends RouteBuilder {
 		from("direct:getCacheGreeting")
 			.setHeader("CamelInfinispanOperation", constant("CamelInfinispanOperationGet"))
 			.setHeader("CamelInfinispanKey", constant("Greeting"))
-			.to("infinispan:pegadaian-cache?cacheContainer=#cacheManager")
+			.to("infinispan:cache-service?cacheContainer=#cacheManager&cacheName=pegadaian-cache")
 			.setBody(header("CamelInfinispanOperationResult"))
 			.choice()
 				.when(header("CamelInfinispanOperationResult").isNotNull())

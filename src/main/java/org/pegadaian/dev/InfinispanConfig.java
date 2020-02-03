@@ -4,11 +4,11 @@ import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 
 public class InfinispanConfig {
-	ConfigurationBuilder cacheContainerConfig;
+	ConfigurationBuilder clientBuilder;
 	
 	public InfinispanConfig() {
-		cacheContainerConfig = new ConfigurationBuilder();
-		cacheContainerConfig.addServer()
+		clientBuilder = new ConfigurationBuilder();
+		clientBuilder.addServer()
 			.host("cache-service")
 			.port(11222)
 			.security()
@@ -20,7 +20,7 @@ public class InfinispanConfig {
 	}
 	
 	public RemoteCacheManager newCacheManager() {
-		return new RemoteCacheManager(cacheContainerConfig.build());
+		return new RemoteCacheManager(clientBuilder.build());
 	}
 
 }
