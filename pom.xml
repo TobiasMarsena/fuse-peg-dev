@@ -55,41 +55,13 @@
       <version>2.22.2</version><!--$NO-MVN-MAN-VER$-->
     </dependency>
     <dependency>
-	    <groupId>org.apache.camel</groupId>
-	    <artifactId>camel-http</artifactId>
-	    <version>2.22.2</version>
-	</dependency>
-    <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson</artifactId>
       </dependency>
     <dependency>
     	<groupId>org.apache.camel</groupId>
-    	<artifactId>camel-jbossdatagrid</artifactId>
-    	<version>6.5.1.Final-redhat-1</version>
-    	<exclusions>
-      	<exclusion>
-          <groupId>org.infinispan</groupId>
-          <artifactId>infinispan-embedded</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.infinispan</groupId>
-          <artifactId>infinispan-query-dsl</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.infinispan</groupId>
-          <artifactId>infinispan-commons</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <!-- DB Connectors -->
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-    </dependency>
-    <dependency>
-    	<groupId>org.postgresql</groupId>
-    	<artifactId>postgresql</artifactId>
+    	<artifactId>camel-infinispan</artifactId>
+    	<version>3.0.0</version>
     </dependency>
   </dependencies>
   <repositories>
