@@ -18,7 +18,9 @@ public class InfinispanConfig {
 				.enable()
 				.username("pegadaian")
 				.password("pegadaian")
-				.serverName("cache-service");
+				.serverName("cache-service")
+			.ssl()
+			.trustStorePath("/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt");
 		
 		return cfg;
 	}
