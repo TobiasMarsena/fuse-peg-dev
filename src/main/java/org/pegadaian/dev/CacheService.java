@@ -15,8 +15,7 @@ public class CacheService {
 	public CacheService() {
 	}
 	
-	public static void createCache() {
-		RemoteCacheManager remote = new RemoteCacheManager(cfg.build());
+	public static void createCache(RemoteCacheManager remote) {
 		String cacheName = "pegadaian-cache";
 		
 		final RemoteCache<?,?> createdCache = remote.administration()
@@ -33,6 +32,7 @@ public class CacheService {
 	}
 	public static void putCache(String key, Object value) {
 		RemoteCacheManager remote = new RemoteCacheManager(cfg.build());
+		createCache(remote);
 		final RemoteCache<String,Object> remoteCache = remote.getCache("pegadaian-cache");
 		remoteCache.put(key, value);
 	}
