@@ -5,9 +5,9 @@ import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.commons.api.CacheContainerAdmin;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component("cacheService")
+@Service("cacheService")
 public class CacheService {
 	
 	static ConfigurationBuilder cfg = InfinispanConfig.createConfig();

@@ -45,13 +45,13 @@ public class CacheRoute extends RouteBuilder {
 			.marshal().json(JsonLibrary.Jackson)
 			.convertBodyTo(String.class)
 			.log("Sending body >>>>> ${body} to cache")
-			.bean(CacheService.class, "putCache(greeting, ${body})")
+			.bean("cacheService", "putCache(greeting, ${body})")
 			.log("Successfully cache ${body} to Data Grid")
 			.unmarshal().json(JsonLibrary.Jackson)
 		;
 		from("direct:getCacheGreeting")
 			.log("Retrieving data from cache")
-			.bean(CacheService.class, "getCache(greeting")
+			.bean("cacheService", "getCache(greeting")
 			.log("Returned value: ${body}")
 			.unmarshal().json(JsonLibrary.Jackson)
 		;
