@@ -21,15 +21,15 @@ public class CacheRoute extends RouteBuilder {
 		;
 		
 		rest().bindingMode(RestBindingMode.json).enableCORS(true).path("/hello").description("Greet Service")
-			.get().id("list").outType(Greeting.class).produces("application/json").path("/{name}")
+			.get("/{name}").id("list").outType(Greeting.class).produces("application/json")
 				.description("Greet user that use this service")
 				.responseMessage().code(200).message("All users successfully returned").endResponseMessage()
 				.to("bean:greetService?method=greetUser")
-			.get().id("cache").outType(Greeting.class).produces("application/json").path("/list/cache")
+			.get("/list/cache").id("cache").outType(Greeting.class).produces("application/json")
 				.description("Return all cache")
 				.responseMessage().code(200).message("All cache successfully returned").endResponseMessage()
 				.to("direct:getCacheGreeting")
-			.get().id("putCache").consumes("application/json").path("/cache/{name}")
+			.get("/cache/{name}").id("putCache").consumes("application/json")
 				.description("Put cache data")
 				.responseMessage().code(200).message("Data successfully cached").endResponseMessage()
 				.to("direct:putCache")
