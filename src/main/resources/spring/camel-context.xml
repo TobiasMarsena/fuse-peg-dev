@@ -17,27 +17,27 @@
             <apiProperty key="api.specification.contentType.yaml" value="application/vnd.oai.openapi;version=2.0"/>
         </restConfiguration>
         <!-- Greet service -->
-        <rest bindingMode="json" enableCORS="true"
-            id="rest-72d29697-dc6a-4807-bc6a-923b3c5a2678" path="/hello">
-            <description>Greet Service</description>
-            <get id="list" outType="org.pegadaian.dev.Greeting"
-                produces="application/json" uri="/{name}">
-                <description>Greet user that used this service</description>
-                <responseMessage code="200" message="All users successfully returned"/>
-                <to uri="bean:greetService?method=greetUser"/>
-            </get>
-            <get id="cache" outType="org.pegadaian.dev.Greeting"
-                produces="application/json" uri="/list/cache">
-                <description>Return all cache data</description>
-                <responseMessage code="200" message="All cache successfully returned"/>
-                <to uri="direct:getCacheGreeting"/>
-            </get>
-            <get consumes="application/json" id="putCache" uri="/cache/{name}">
-                <description>Put cache data</description>
-                <responseMessage code="200" message="Data successfully cached"/>
-                <to uri="direct:putCache"/>
-            </get>
-        </rest>
+<!--         <rest bindingMode="json" enableCORS="true" -->
+<!--             id="rest-72d29697-dc6a-4807-bc6a-923b3c5a2678" path="/hello"> -->
+<!--             <description>Greet Service</description> -->
+<!--             <get id="list" outType="org.pegadaian.dev.Greeting" -->
+<!--                 produces="application/json" uri="/{name}"> -->
+<!--                 <description>Greet user that used this service</description> -->
+<!--                 <responseMessage code="200" message="All users successfully returned"/> -->
+<!--                 <to uri="bean:greetService?method=greetUser"/> -->
+<!--             </get> -->
+<!--             <get id="cache" outType="org.pegadaian.dev.Greeting" -->
+<!--                 produces="application/json" uri="/list/cache"> -->
+<!--                 <description>Return all cache data</description> -->
+<!--                 <responseMessage code="200" message="All cache successfully returned"/> -->
+<!--                 <to uri="direct:getCacheGreeting"/> -->
+<!--             </get> -->
+<!--             <get consumes="application/json" id="putCache" uri="/cache/{name}"> -->
+<!--                 <description>Put cache data</description> -->
+<!--                 <responseMessage code="200" message="Data successfully cached"/> -->
+<!--                 <to uri="direct:putCache"/> -->
+<!--             </get> -->
+<!--         </rest> -->
         <!--         <route id="cache-greeting"> -->
         <!--             <from id="_from1" uri="direct:putCache"/> -->
         <!--             <to id="_to1" uri="bean:greetService?method=greetUser"/> -->
