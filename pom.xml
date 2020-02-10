@@ -38,14 +38,6 @@
       <artifactId>camel-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
-    	<groupId>org.apache.camel</groupId>
-    	<artifactId>camel-jdbc</artifactId>
-    </dependency>
-    <dependency>
-    	<groupId>org.apache.camel</groupId>
-    	<artifactId>camel-sql</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-swagger-java-starter</artifactId>
     </dependency>
@@ -55,13 +47,8 @@
       <version>2.22.2</version><!--$NO-MVN-MAN-VER$-->
     </dependency>
     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-jackson</artifactId>
-      </dependency>
-    <dependency>
-    	<groupId>org.infinispan</groupId>
-    	<artifactId>infinispan-client-hotrod</artifactId>
-    	<version>10.0.1.Final</version>
+    	<groupId>org.apache.camel</groupId>
+    	<artifactId>camel-jaxb</artifactId>
     </dependency>
   </dependencies>
   <repositories>
