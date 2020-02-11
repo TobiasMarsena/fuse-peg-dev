@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 @Service("cacheService")
 public class CacheService {
 	
-	static ConfigurationBuilder cfg = InfinispanConfig.createConfig();
+	ConfigurationBuilder cfg = InfinispanConfig.createConfig();
 	
 	public CacheService() {
 	}
 	
-	public static void createCache(RemoteCacheManager remote) {
+	public void createCache(RemoteCacheManager remote) {
 		String cacheName = "pegadaian-cache";
 		
 		final RemoteCache<?,?> createdCache = remote.administration()
@@ -24,13 +24,13 @@ public class CacheService {
 		
 		assert createdCache != null : "Expected created cache to be non-null";
 	}
-	public static void getCache(String key, Exchange exchange) {
+	public void getCache(String key, Exchange exchange) {
 		RemoteCacheManager remote = new RemoteCacheManager(cfg.build());
 		final RemoteCache<String, Object> remoteCache = remote.getCache("pegadaian-cache");
 		Object value = remoteCache.get(key);
 		exchange.getIn().setBody(value, String.class);
 	}
-	public static void putCache(String key, Object value) {
+	public void putCache(String key, Object value) {
 		RemoteCacheManager remote = new RemoteCacheManager(cfg.build());
 		createCache(remote);
 		final RemoteCache<String,Object> remoteCache = remote.getCache("pegadaian-cache");
