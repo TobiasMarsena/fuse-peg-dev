@@ -44,14 +44,16 @@ public class CacheRoute extends RouteBuilder {
 			.id("greeting-to-cache")
 			.marshal().json(JsonLibrary.Jackson)
 			.convertBodyTo(String.class)
+			.setHeader("cacheKey", simple("greeting"))
 			.log("Sending body >>>>> ${body} to cache")
-			.bean("cacheService", "putCache(greeting, ${body})")
+			.bean("cacheService", "putCache(${header.cacheKey}, ${body})")
 			.log("Successfully cache ${body} to Data Grid")
 			.unmarshal().json(JsonLibrary.Jackson)
 		;
 		from("direct:getCacheGreeting")
 			.log("Retrieving data from cache")
-			.bean("cacheService", "getCache(greeting")
+			.setHeader("cacheKey", simple("greeting"))
+			.bean("cacheService", "getCache(${header.cacheKey})")
 			.log("Returned value: ${body}")
 			.unmarshal().json(JsonLibrary.Jackson)
 		;
