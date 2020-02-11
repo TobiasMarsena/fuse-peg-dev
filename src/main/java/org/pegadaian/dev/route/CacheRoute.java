@@ -43,6 +43,7 @@ public class CacheRoute extends RouteBuilder {
 		from("direct:putCacheGreeting")
 			.id("greeting-to-cache")
 			.marshal().json(JsonLibrary.Jackson)
+			.convertBodyTo(String.class)
 			.log("Sending body >>>>> ${body} to cache")
 			.bean("cacheService", "putCache(greeting, ${body})")
 			.log("Successfully cache ${body} to Data Grid")
