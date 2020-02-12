@@ -13,7 +13,7 @@ public class InfinispanConfig {
 		
 		cfg
 			.addServer()
-				.host("https://cache-service-route-middleware.apps.ocp-jkt.pegadaian.co.id/")
+				.host("cache-service-route-middleware.apps.ocp-jkt.pegadaian.co.id")
 				.port(443)
 			.security().authentication()
 				.enable()
