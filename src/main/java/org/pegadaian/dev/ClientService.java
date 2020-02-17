@@ -14,4 +14,12 @@ public class ClientService {
 		client.setStandardFlowEnabled(false);
 		return client;
 	}
+	
+	public void sleep() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }
