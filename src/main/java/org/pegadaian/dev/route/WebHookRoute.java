@@ -70,12 +70,12 @@ public class WebHookRoute extends RouteBuilder {
 			.setHeader(Exchange.HTTP_QUERY, simple("clientId=${body.getApplicationId}"))
 			
 			.to("https4://{{sso.host.ocp-jkt}}/auth/admin/realms/3scale-sso/clients")
-			.unmarshal().json(JsonLibrary.Gson, Client[].class)
+			.unmarshal().json(JsonLibrary.Gson, Client.class)
 		
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("PUT"))
 			.log("${body}")
-			.setHeader(Exchange.HTTP_PATH, simple("${body[0].getId}"))
+			.setHeader(Exchange.HTTP_PATH, simple("${body.getId}"))
 			.setBody(method("clientService", "changeFlow"))
 			
 			.marshal().json(JsonLibrary.Gson, Client.class)
