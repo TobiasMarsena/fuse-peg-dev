@@ -41,7 +41,7 @@ public class WebHookRoute extends RouteBuilder {
 			.setHeader(Exchange.CONTENT_TYPE, constant("application/x-www-form-urlencoded"))
 			.setBody(simple("grant_type=password&username={{sso.username}}&password={{sso.password}}&client_id=admin-cli"))
 			
-			.to("https4://sso-sso.apps.ocp-jkt.pegadaian.co.id/auth/realms/master/protocol/openid-connect/token")
+			.to("https4://{{sso.host.ocp-jkt}}/auth/realms/master/protocol/openid-connect/token")
 			.unmarshal().json(JsonLibrary.Gson, Token.class)
 			.bean("token", "setAccess_token(${body.getAccess_token})")
 			.bean("token", "setRefresh_token(${body.getRefresh_token})")
@@ -54,7 +54,7 @@ public class WebHookRoute extends RouteBuilder {
 			.setHeader(Exchange.CONTENT_TYPE, constant("application/x-www-form-urlencoded"))
 			.setBody(method("token", "refreshBodyRequest"))
 
-			.to("https4://sso-sso.apps.ocp-jkt.pegadaian.co.id/auth/realms/master/protocol/openid-connect/token")			
+			.to("https4://{{sso.host.ocp-jkt}}/auth/realms/master/protocol/openid-connect/token")			
 			.unmarshal().json(JsonLibrary.Gson, Token.class)
 			.bean("token", "setAccess_token(${body.getAccess_token})")
 			.bean("token", "setRefresh_token(${body.getRefresh_token})")
@@ -69,16 +69,17 @@ public class WebHookRoute extends RouteBuilder {
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
 			.setHeader(Exchange.HTTP_QUERY, simple("clientId=${body.getApplicationId}"))
 			
-			.to("https4://sso-sso.apps.ocp-jkt.pegadaian.co.id/auth/admin/realms/3scale-sso/clients")
+			.to("https4://{{sso.host.ocp-jkt}}/auth/admin/realms/3scale-sso/clients")
 			.unmarshal().json(JsonLibrary.Gson, Client[].class)
 		
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+			.log("${body}")
 			.setHeader(Exchange.HTTP_PATH, simple("${body[0].getId}"))
 			.setBody(method("clientService", "changeFlow"))
 			
 			.marshal().json(JsonLibrary.Gson, Client.class)
-			.to("https4://sso-sso.apps.ocp-jkt.pegadaian.co.id/auth/admin/realms/3scale-sso/clients/")
+			.to("https4://{{sso.host.ocp-jkt}}/auth/admin/realms/3scale-sso/clients/")
 			.log("Successfully change the Auth flow to Direct Access Grants with status code: ${header.CamelHttpResponseCode}")
 		;
 	}
