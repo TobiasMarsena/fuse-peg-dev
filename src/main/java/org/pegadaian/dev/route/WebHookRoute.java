@@ -68,16 +68,18 @@ public class WebHookRoute extends RouteBuilder {
 			.setHeader("Authorization", method("token", "bearerAuth"))
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
 			.setHeader(Exchange.HTTP_QUERY, simple("clientId=${body.getApplicationId}"))
+			.log("Before sleep: ${body}")
 			.bean("clientService", "sleep")
 			
 			.to("https4://{{sso.host.ocp-jkt}}/auth/admin/realms/3scale-sso/clients")
 			.unmarshal().json(JsonLibrary.Gson, Client[].class)
 		
+			.log("After GET: ${body[0]}")
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("PUT"))
 			.setHeader(Exchange.HTTP_PATH, simple("${body[0].getId}"))
 			.setBody(method("clientService", "changeFlow"))
-			
+			.log("${body}")
 			.marshal().json(JsonLibrary.Gson, Client.class)
 			.to("https4://{{sso.host.ocp-jkt}}/auth/admin/realms/3scale-sso/clients/")
 			.log("Successfully change the Auth flow to Direct Access Grants with status code: ${header.CamelHttpResponseCode}")
