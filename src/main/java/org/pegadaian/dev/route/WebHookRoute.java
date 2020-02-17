@@ -77,6 +77,7 @@ public class WebHookRoute extends RouteBuilder {
 			.setHeader(Exchange.HTTP_METHOD, constant("PUT"))
 			.setHeader(Exchange.HTTP_PATH, simple("${body[0].getId}"))
 			.setBody(method("clientService", "changeFlow"))
+			.log("Sending PUT Request with ${body}")
 			.marshal().json(JsonLibrary.Gson, Client.class)
 			.to("https4://{{sso.host.ocp-jkt}}/auth/admin/realms/3scale-sso/clients/")
 			.log("Successfully change the Auth flow to Direct Access Grants with status code: ${header.CamelHttpResponseCode}")
