@@ -71,6 +71,7 @@ public class WebHookRoute extends RouteBuilder {
 			.log("For client: ${body.getApplicationId}")
 			
 			.to("https4://{{sso.host.ocp-jkt}}/auth/admin/realms/3scale-sso/clients")
+			.log("${body}")
 			.unmarshal().json(JsonLibrary.Gson, Client[].class)
 		
 			.removeHeaders("Camel*")
