@@ -21,12 +21,17 @@ import org.springframework.stereotype.Service;
 @Service("greetService")
 public class GreetServiceImpl implements GreetService {
 
-    @Override
     public Greeting greetUser(Exchange exchange) {
     	Greeting greeting = new Greeting();
     	greeting.setRegard("Hello " + exchange.getIn().getHeader("name"));
     	greeting.setDate(java.time.LocalDateTime.now().toString());
         return greeting;
+    }
+    
+    public String getName(Exchange exchange) {
+    	Greeting greeting = exchange.getIn().getBody(Greeting.class);
+    	String name = greeting.getRegard().substring(6);
+    	return name;
     }
 
 }

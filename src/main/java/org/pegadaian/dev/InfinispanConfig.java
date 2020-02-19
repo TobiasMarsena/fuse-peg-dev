@@ -22,7 +22,7 @@ public class InfinispanConfig {
 				.serverName("cache-service")
 				.saslQop(SaslQop.AUTH)
 			.ssl()
-			.trustStorePath("/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt");
+			.trustStorePath("classpath:apps-ocp-jkt-pegadaian-co-id-chain.pem");
 		
 		return cfg;
 	}
