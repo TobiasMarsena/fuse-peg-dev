@@ -14,12 +14,7 @@ public class CacheRoute extends RouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
-				
-		onException(Exception.class)
-			.handled(true)
-			.maximumRedeliveries(2)
-		;
-		
+
 		rest().bindingMode(RestBindingMode.json).enableCORS(true).path("/hello").description("Greet Service")
 			.get("/{name}").id("list").outType(Greeting.class).produces("application/json")
 				.description("Greet user that use this service")
@@ -48,7 +43,6 @@ public class CacheRoute extends RouteBuilder {
 			.log("Sending body >>>>> ${body} to cache")
 			.bean("cacheService", "putCache(${header.cacheKey}, ${body})")
 			.log("Successfully cache ${body} to Data Grid")
-			.unmarshal().json(JsonLibrary.Jackson)
 		;
 		from("direct:getCacheGreeting")
 			.log("Retrieving data from cache")
@@ -57,36 +51,5 @@ public class CacheRoute extends RouteBuilder {
 			.log("Returned value: ${body}")
 			.unmarshal().json(JsonLibrary.Jackson)
 		;
-//		
-//		from("direct:putCacheGreeting")
-//			.id("greeting-to-cache")
-//			.marshal().json(JsonLibrary.Jackson)
-//			.convertBodyTo(String.class)
-//			.setHeader("CamelInfinispanOperation", constant("CamelInfinispanOperationPut"))
-//			.setHeader("CamelInfinispanValue", body())
-//			.setHeader("CamelInfinispanKey", constant("Greeting"))
-//			.setHeader("CamelInfinispanLifespanTime", constant("20s"))
-//			.log("Sending body >>>>> ${body} >>>>> to cache")
-//			.to("infinispan:cache-service?cacheContainer=#cacheManager&cacheName=pegadaian-cache")
-//			.log("Success save to cache jboss data grid: ${body}")
-//			.unmarshal().json(JsonLibrary.Jackson)
-//		;
-//		
-//		from("direct:getCacheGreeting")
-//			.setHeader("CamelInfinispanOperation", constant("CamelInfinispanOperationGet"))
-//			.setHeader("CamelInfinispanKey", constant("Greeting"))
-//			.to("infinispan:cache-service?cacheContainer=#cacheManager&cacheName=pegadaian-cache")
-//			.setBody(header("CamelInfinispanOperationResult"))
-//			.choice()
-//				.when(header("CamelInfinispanOperationResult").isNotNull())
-//					.convertBodyTo(String.class)
-//					.unmarshal().json(JsonLibrary.Jackson)
-//					.log("Get cache success >>> " + body())
-//				.otherwise()
-//					.log("Get nothing")
-//			.endChoice()
-//		;
 	}
-
-	
 }
