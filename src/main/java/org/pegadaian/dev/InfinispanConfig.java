@@ -22,7 +22,9 @@ public class InfinispanConfig {
 				.serverName("cache-service")
 				.saslQop(SaslQop.AUTH)
 			.ssl()
-			.trustStorePath("classpath:apps-ocp-jkt-pegadaian-co-id-chain.pem");
+			.trustStorePath("apps-ocp-jkt-pegadaian-co-id-chain.pem")
+			.trustStoreType("PEM")
+		;
 		
 		return cfg;
 	}
