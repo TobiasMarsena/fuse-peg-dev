@@ -3,9 +3,6 @@ package org.pegadaian.dev.route;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.apache.camel.model.rest.RestOperationResponseMsgDefinition;
-import org.apache.camel.model.rest.VerbDefinition;
-import org.pegadaian.dev.CacheService;
 import org.pegadaian.dev.Greeting;
 import org.springframework.stereotype.Component;
 

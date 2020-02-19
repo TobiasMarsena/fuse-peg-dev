@@ -1,5 +1,6 @@
 package org.pegadaian.dev;
 
+import org.infinispan.client.hotrod.configuration.ClientIntelligence;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.client.hotrod.configuration.SaslQop;
 
@@ -20,11 +21,10 @@ public class InfinispanConfig {
 				.username("pegadaian")
 				.password("pegadaian")
 				.serverName("cache-service")
-				.saslQop(SaslQop.AUTH)
-			.ssl()
-			.trustStorePath("apps-ocp-jkt-pegadaian-co-id-chain.pem")
-			.trustStoreType("PEM")
-		;
+		        .saslQop(SaslQop.AUTH)
+		        .ssl()
+		        	.trustStorePath("/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt")
+        ;
 		
 		return cfg;
 	}
