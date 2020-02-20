@@ -30,8 +30,7 @@ public class GreetServiceImpl implements GreetService {
     
     public String getName(Exchange exchange) {
     	Greeting greeting = exchange.getIn().getBody(Greeting.class);
-    	String name = greeting.getRegard().substring(6);
-    	return name;
+    	return greeting.getRegard().substring(6);
     }
 
 }

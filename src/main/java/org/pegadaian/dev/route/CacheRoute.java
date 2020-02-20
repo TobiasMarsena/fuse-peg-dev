@@ -43,7 +43,6 @@ public class CacheRoute extends RouteBuilder {
 			.setHeader("cacheKey", simple("name"))
 			.bean("cacheService", "getCache(${header.cacheKey})")
 			.log("Returned value: ${body}")
-			.unmarshal().json(JsonLibrary.Jackson)
 		;
 	}
 }
