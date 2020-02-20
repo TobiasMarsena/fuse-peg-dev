@@ -24,7 +24,7 @@ public class GreetServiceImpl implements GreetService {
     @Override
     public Greeting greetUser(Exchange exchange) {
     	Greeting greeting = new Greeting();
-    	greeting.setRegard("Hello " + exchange.getIn().getHeader("name"));
+    	greeting.setRegard("###Internal-Development### Hello " + exchange.getIn().getHeader("name"));
     	greeting.setDate(java.time.LocalDateTime.now().toString());
         return greeting;
     }
