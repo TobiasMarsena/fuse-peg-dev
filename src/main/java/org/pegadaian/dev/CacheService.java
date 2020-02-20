@@ -30,11 +30,12 @@ public class CacheService {
 		final RemoteCache<String, String> remoteCache = remote.getCache(cacheName);
 		String value = remoteCache.get(key);
 		exchange.getIn().setBody(value, String.class);
+		remote.close();
 	}
 	public void putCache(String key, String value) {
 		logger.info("Reached putCache Method");
 		RemoteCacheManager remote = new RemoteCacheManager(cfg.build());
-		logger.info("Instantiate remoteCacheManager");
+		logger.info("Instantiate remoteCacheManager. isStarted returns {}", remote.isStarted());
 		RemoteCache<String, String> remoteCache = createCache(remote);
 		logger.info("Cache exist with name: {}", cacheName);
 		remoteCache.put(key, value);
