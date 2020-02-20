@@ -48,7 +48,7 @@ public class WebHookRoute extends RouteBuilder {
 			.log("Token to access Single Sign-On is saved. Automatically refresh the token when expiry is due.")
 		;
 		
-		from("timer:refreshToken?delay=60s&period=60s")
+		from("timer:refreshToken?delay=50s&period=50s")
 			.setHeader("Authorization", method("token", "bearerAuth"))
 			.setHeader(Exchange.HTTP_METHOD, constant("POST"))
 			.setHeader(Exchange.CONTENT_TYPE, constant("application/x-www-form-urlencoded"))
