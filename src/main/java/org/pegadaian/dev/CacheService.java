@@ -22,7 +22,6 @@ public class CacheService {
 	public RemoteCache<String, String> createCache(RemoteCacheManager remote) {	
 		logger.info("Creating {}", cacheName);
 		return remote.administration()
-				.withFlags(CacheContainerAdmin.AdminFlag.VOLATILE)
 				.getOrCreateCache(cacheName, "default");
 	}
 	public void getCache(String key, Exchange exchange) {
