@@ -19,11 +19,11 @@ public class CacheService {
 	public CacheService() {
 	}
 	
-	public void createCache(RemoteCacheManager remote) {		
-		remote.administration()
+	public RemoteCache<String, String> createCache(RemoteCacheManager remote) {	
+		logger.info("Creating {}", cacheName);
+		return remote.administration()
 				.withFlags(CacheContainerAdmin.AdminFlag.PERMANENT)
 				.getOrCreateCache(cacheName, "default");
-		logger.info("Cache exist with name: {}", cacheName);
 	}
 	public void getCache(String key, Exchange exchange) {
 		RemoteCacheManager remote = new RemoteCacheManager(cfg.build());
@@ -35,10 +35,8 @@ public class CacheService {
 		logger.info("Reached putCache Method");
 		RemoteCacheManager remote = new RemoteCacheManager(cfg.build());
 		logger.info("Instantiate remoteCacheManager");
-		createCache(remote);
-		logger.info("Created pegadaian-cache");
-		final RemoteCache<String, String> remoteCache = remote.getCache(cacheName);
-		logger.info("Get the pegadaian-cache");
+		RemoteCache<String, String> remoteCache = createCache(remote);
+		logger.info("Cache exist with name: {}", cacheName);
 		remoteCache.put(key, value);
 		logger.info("Put a value to pegadaian-cache");
 	}
