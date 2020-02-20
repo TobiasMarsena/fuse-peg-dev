@@ -21,8 +21,8 @@ public class InfinispanConfig {
 		        .ssl()
 		        .trustStorePath("/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt");
 		builder.maxRetries(2);
-		builder.socketTimeout(10000);
-		builder.connectionTimeout(10000);
+		builder.socketTimeout(5000);
+		builder.connectionTimeout(5000);
 		return builder;
 	}
 
