@@ -1,6 +1,5 @@
 package org.pegadaian.dev;
 
-import org.infinispan.client.hotrod.configuration.ClientIntelligence;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.client.hotrod.configuration.SaslQop;
 
@@ -10,23 +9,18 @@ public class InfinispanConfig {
 	}
 	
 	public static ConfigurationBuilder createConfig() {
-		ConfigurationBuilder cfg = new ConfigurationBuilder();
-		
-		cfg
-			.addServer()
-				.host("cache-service-route-middleware.apps.ocp-jkt.pegadaian.co.id")
-				.port(11222)
-			.security().authentication()
-				.enable()
-				.username("pegadaian")
-				.password("pegadaian")
-				.serverName("cache-service")
+		ConfigurationBuilder builder = new ConfigurationBuilder();
+		builder.addServer()
+			.host("cache-service").port(11222)
+			.security()
+		        .authentication().enable()
+		        .username("pegadaian")
+		        .password("pegadaian")
+		        .serverName("cache-service")
 		        .saslQop(SaslQop.AUTH)
 		        .ssl()
-		        	.trustStorePath("/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt")
-        ;
-		
-		return cfg;
+		        .trustStorePath("/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt");
+		return builder;
 	}
 
 }
