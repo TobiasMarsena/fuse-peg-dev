@@ -20,6 +20,9 @@ public class InfinispanConfig {
 		        .saslQop(SaslQop.AUTH)
 		        .ssl()
 		        .trustStorePath("/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt");
+		builder.maxRetries(2);
+		builder.socketTimeout(10000);
+		builder.connectionTimeout(10000);
 		return builder;
 	}
 

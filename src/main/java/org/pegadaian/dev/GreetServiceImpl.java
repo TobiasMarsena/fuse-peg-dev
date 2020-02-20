@@ -27,10 +27,4 @@ public class GreetServiceImpl implements GreetService {
     	greeting.setDate(java.time.LocalDateTime.now().toString());
         return greeting;
     }
-    
-    public String getName(Exchange exchange) {
-    	Greeting greeting = exchange.getIn().getBody(Greeting.class);
-    	return greeting.getRegard().substring(6);
-    }
-
 }
