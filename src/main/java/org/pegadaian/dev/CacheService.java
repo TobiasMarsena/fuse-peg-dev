@@ -14,7 +14,7 @@ public class CacheService {
 	
 	ConfigurationBuilder cfg = InfinispanConfig.createConfig();
 	Logger logger = LoggerFactory.getLogger(CacheService.class);
-	String cacheName = "pegadaian-cache";
+	String cacheName = "new-cache";
 	
 	public CacheService() {
 	}
