@@ -14,7 +14,7 @@ public class CacheService {
 	
 	ConfigurationBuilder cfg = InfinispanConfig.createConfig();
 	Logger logger = LoggerFactory.getLogger(CacheService.class);
-	String cacheName = "new-cache";
+	String cacheName = "default";
 	
 	public CacheService() {
 	}
@@ -35,7 +35,8 @@ public class CacheService {
 		logger.info("Reached putCache Method");
 		RemoteCacheManager remote = new RemoteCacheManager(cfg.build());
 		logger.info("Instantiate remoteCacheManager. isStarted returns {}", remote.isStarted());
-		RemoteCache<String, String> remoteCache = createCache(remote);
+//		RemoteCache<String, String> remoteCache = createCache(remote);
+		RemoteCache<String, String> remoteCache = remote.getCache(cacheName);
 		logger.info("Cache exist with name: {}", cacheName);
 		remoteCache.put(key, value);
 		logger.info("Put a value to pegadaian-cache");
