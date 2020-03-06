@@ -1,6 +1,7 @@
 package org.pegadaian.dev;
 
 import org.apache.camel.Exchange;
+import org.pegadaian.dev.model.Client;
 import org.springframework.stereotype.Service;
 
 @Service

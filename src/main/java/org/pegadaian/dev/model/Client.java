@@ -1,4 +1,4 @@
-package org.pegadaian.dev;
+package org.pegadaian.dev.model;
 
 import org.apache.camel.Exchange;
 

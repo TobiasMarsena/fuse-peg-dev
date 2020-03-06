@@ -3,13 +3,12 @@ package org.pegadaian.dev.route;
 import javax.xml.bind.JAXBContext;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
-import org.apache.camel.model.dataformat.JsonLibrary;
-import org.pegadaian.dev.Client;
-import org.pegadaian.dev.ClientService;
-import org.pegadaian.dev.Event;
-import org.pegadaian.dev.Token;
+import org.pegadaian.dev.model.Event;
+import org.pegadaian.dev.process.FindPlan;
+import org.pegadaian.dev.process.FindService;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +17,8 @@ public class WebHookRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 		
+		Processor findService = new FindService();
+		Processor findPlan = new FindPlan();
 		JAXBContext jaxbContext = JAXBContext.newInstance(Event.class);
 		JaxbDataFormat eventDataFormat = new JaxbDataFormat(jaxbContext);
 		
@@ -29,61 +30,176 @@ public class WebHookRoute extends RouteBuilder {
 			.apiProperty("api.specification.contentType.yaml", "application/vnd.oai.openapi;version2.0")
 		;
 		
-		rest().path("/sso")
-			.post().id("3scale-sso-webhook").consumes("application/xml")
-				.description("Content Based webhook to integrate 3Scale with RH-SSO")
+		rest().path("/")
+			.post().id("3scale-webhook").consumes("application/xml")
+				.description("Content Based webhook to integrate 3Scale JKT to SBY")
 				.responseMessage().code(200).message("Webhook successfully processed").endResponseMessage()
-				.to("direct:appCreated")
+				.to("direct:webhookType")
 			;
 		
-		from("timer:initialAccessToken?repeatCount=1")
-			.setHeader(Exchange.HTTP_METHOD, constant("POST"))
-			.setHeader(Exchange.CONTENT_TYPE, constant("application/x-www-form-urlencoded"))
-			.setBody(simple("grant_type=password&username={{sso.username}}&password={{sso.password}}&client_id=admin-cli"))
-			
-			.to("https4://{{sso.host.ocp-jkt}}/auth/realms/master/protocol/openid-connect/token")
-			.unmarshal().json(JsonLibrary.Gson, Token.class)
-			.bean("token", "setAccess_token(${body.getAccess_token})")
-			.bean("token", "setRefresh_token(${body.getRefresh_token})")
-			.log("Token to access Single Sign-On is saved. Automatically refresh the token when expiry is due.")
-		;
+//		from("timer:test?repeatCount=1")
+//			.log("Testing SSL to 3Scale JKT")
+//			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+//			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.source.api}}"))
+//			.to("{{3scale.source.url}}/admin/api/accounts.xml")
+//			.log("${headers}")
+//			.log("${body}")
+//			
+//			.log("Testing SSL to 3Scale SBY")
+//			.removeHeaders("Camel*")
+//			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+//			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
+//			.to("{{3scale.dest.url}}/admin/api/accounts.xml")
+//			.log("${headers}")
+//			.log("${body}")
+//		;
 		
-		from("timer:refreshToken?delay=50s&period=50s")
-			.setHeader("Authorization", method("token", "bearerAuth"))
-			.setHeader(Exchange.HTTP_METHOD, constant("POST"))
-			.setHeader(Exchange.CONTENT_TYPE, constant("application/x-www-form-urlencoded"))
-			.setBody(method("token", "refreshBodyRequest"))
-
-			.to("https4://{{sso.host.ocp-jkt}}/auth/realms/master/protocol/openid-connect/token")			
-			.unmarshal().json(JsonLibrary.Gson, Token.class)
-			.bean("token", "setAccess_token(${body.getAccess_token})")
-			.bean("token", "setRefresh_token(${body.getRefresh_token})")
-			.log("Successfully request new refreshed token.")
-		;
-		
-		from("direct:appCreated")
+		from("direct:webhookType").id("Content Based Router")
 			.unmarshal(eventDataFormat)
-			.log("Received webhook from 3Scale. Processing . . .")
-			.removeHeaders("Camel*")
-			.setHeader("Authorization", method("token", "bearerAuth"))
-			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-			.setHeader(Exchange.HTTP_QUERY, simple("clientId=${body.getApplicationId}"))
-			.bean("clientService", "sleep")
-			
-			.to("https4://{{sso.host.ocp-jkt}}/auth/admin/realms/3scale-sso/clients")
-			.unmarshal().json(JsonLibrary.Gson, Client[].class)
+			.choice()
+				.when().simple("${body.getType} == 'account' && ${body.getAction} == 'created'")
+					.to("direct:accountCreated")
+				.when().simple("${body.getType} == 'application' && ${body.getAction} == 'created'")
+					.to("direct:appCreated")
+				.when().simple("${body.getType} == 'application' && ${body.getAction} == 'key_updated'")
+					.to("direct:keyUpdated")
+			.endChoice()
+		;
 		
+		from("direct:keyUpdated")
+			.setHeader("new_application_key", simple("${body.getObject.getApplication.getKeys.getKeys.get(0)}"))
+//			Delete current key
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+					+ "app_id=${body.getObject.getApplication.getApp_id}"))
+			.to("{{3scale.dest.url}}/admin/api/applications/find.xml")
+			.unmarshal(eventDataFormat)
+			
+			.setHeader("AccountID", simple("${body.getAccount_id}"))
+			.setHeader("AppID", simple("${body.getId}"))
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
+			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+					+ "${body.getAccount_id}/applications/"
+					+ "${body.getId}/keys/"
+					+ "${body.getKeys.getKeys.get(0)}.xml")
+			.log("Old key deleted. Creating new synced key . . .")
+			
+//			Create new synced key
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("POST"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+					+ "key=${header.new_application_key}"))
+			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+					+ "${header.AccountID}/applications/"
+					+ "${header.AppID}/keys.xml")
+			.log("New Key updated and synced")
+		;
+		
+		from("direct:accountCreated").id("Account Created Router")
+//			Create Account
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("POST"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+					+ "org_name=${body.getOrg_name}&"
+					+ "username=${body.getUsername}&"
+					+ "email=${body.getEmail}"))
+			.to("{{3scale.dest.url}}/admin/api/signup.xml")
+			.unmarshal(eventDataFormat)
+
+//			Approve Account
+			.log("Account has been created with Organization Name ${body.getOrg_name}")
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-			.setHeader(Exchange.HTTP_PATH, simple("${body[0].getId}"))
-			.setBody(method("clientService", "changeFlow"))
-			.log("Sending PUT Request with ${body}")
-			.bean("clientService", "sleep")
-			.marshal().json(JsonLibrary.Gson, Client.class)
-			.to("https4://{{sso.host.ocp-jkt}}/auth/admin/realms/3scale-sso/clients/")
-			.log("Successfully change the Auth flow to Direct Access Grants with status code: ${header.CamelHttpResponseCode}")
-		;
-	}
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
+			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+					+ "${body.getId}/approve.xml")
+			.unmarshal(eventDataFormat)
 
-	
+//			Activate User
+			.log("Account approved.")
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
+			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+					+ "${body.getId}/users/"
+					+ "${body.getUserId}/activate.xml")
+			.log("Account user activated.")
+		;
+		
+		
+		from("direct:appCreated").id("Application Created Router")
+//			Save some value for future query and App creation
+			.setHeader("ServiceID", simple("${body.getObject.getApplication.getService_id}"))
+			.setHeader("PlanName", simple("${body.getObject.getApplication.getPlan.getName}"))
+			.setHeader("name", simple("${body.getObject.getApplication.getName}"))
+			.setHeader("description", simple("${body.getObject.getApplication.getDescription}"))
+			.setHeader("application_id", simple("body.getObject.getApplication.getApp_id"))
+			.setHeader("application_key", simple("${body.getObject.getApplication.getKeys.getKeys.get(0)}"))
+//			Get Account
+			.log("Retrieving additional info for application creation . . .")
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.source.api}}"))
+			.toD("{{3scale.source.url}}/admin/api/accounts/"
+					+ "${body.getObject.getApplication.getAccount_id}.xml")
+			.unmarshal(eventDataFormat)
+			
+//			Find Account id
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+					+ "username=${body.getUsers().get(0).getUsername()}&"
+					+ "email=${body.getUsers().get(0).getEmail()}"))
+			.to("{{3scale.dest.url}}/admin/api/accounts/find.xml")
+			.unmarshal(eventDataFormat)
+//			Remember Account ID
+			.setHeader("AccountID", simple("${body.getId}"))
+			
+//			Get Service
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.source.api}}"))
+			.toD("{{3scale.source.url}}/admin/api/services/"
+					+ "${header.ServiceID}.xml")
+			.unmarshal(eventDataFormat)
+			.setHeader("ServiceName", simple("${body.getSystem_name}"))
+			
+//			Find Service ID
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
+			.to("{{3scale.dest.url}}/admin/api/services.xml")
+			.unmarshal(eventDataFormat)
+			.process(findService)
+			
+//			Find Plan Id
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
+			.toD("{{3scale.dest.url}}/admin/api/services/"
+					+ "${body.getId}/application_plans.xml")
+			.unmarshal(eventDataFormat)
+			.process(findPlan)
+//			Remember Plan ID
+			.setHeader("PlanID", simple("${body.getId}"))
+			
+//			Create Application
+			.log("Creating synced application . . .")
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("POST"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+					+ "plan_id=${header.PlanID}&"
+					+ "name=${header.name}&"
+					+ "description=${header.description}&"
+					+ "application_id=${header.application_id}&"
+					+ "application_key=${header.application_key}"))
+			.setBody(simple("${null}"))
+			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+					+ "${header.AccountID}/applications.xml")
+			.log("Application created and synced")
+		;	
+	}
 }
