@@ -40,16 +40,16 @@ public class WebHookRoute extends RouteBuilder {
 		from("timer:test?repeatCount=1")
 			.log("Testing SSL to 3Scale JKT")
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.source.api}}"))
-			.to("{{3scale.source.url}}/admin/api/accounts.xml")
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.source.api}}"))
+			.to("{{threescale.source.url}}/admin/api/accounts.xml")
 			.log("${headers}")
 			.log("${body}")
 			
 			.log("Testing SSL to 3Scale SBY")
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
-			.to("{{3scale.dest.url}}/admin/api/accounts.xml")
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
+			.to("{{threescale.dest.url}}/admin/api/accounts.xml")
 			.log("${headers}")
 			.log("${body}")
 		;
@@ -71,17 +71,17 @@ public class WebHookRoute extends RouteBuilder {
 //			Delete current key
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}&"
 					+ "app_id=${body.getObject.getApplication.getApp_id}"))
-			.to("{{3scale.dest.url}}/admin/api/applications/find.xml")
+			.to("{{threescale.dest.url}}/admin/api/applications/find.xml")
 			.unmarshal(eventDataFormat)
 			
 			.setHeader("AccountID", simple("${body.getAccount_id}"))
 			.setHeader("AppID", simple("${body.getId}"))
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
-			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
+			.toD("{{threescale.dest.url}}/admin/api/accounts/"
 					+ "${body.getAccount_id}/applications/"
 					+ "${body.getId}/keys/"
 					+ "${body.getKeys.getKeys.get(0)}.xml")
@@ -90,9 +90,9 @@ public class WebHookRoute extends RouteBuilder {
 //			Create new synced key
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("POST"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}&"
 					+ "key=${header.new_application_key}"))
-			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+			.toD("{{threescale.dest.url}}/admin/api/accounts/"
 					+ "${header.AccountID}/applications/"
 					+ "${header.AppID}/keys.xml")
 			.log("New Key updated and synced")
@@ -102,19 +102,19 @@ public class WebHookRoute extends RouteBuilder {
 //			Create Account
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("POST"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}&"
 					+ "org_name=${body.getOrg_name}&"
 					+ "username=${body.getUsername}&"
 					+ "email=${body.getEmail}"))
-			.to("{{3scale.dest.url}}/admin/api/signup.xml")
+			.to("{{threescale.dest.url}}/admin/api/signup.xml")
 			.unmarshal(eventDataFormat)
 
 //			Approve Account
 			.log("Account has been created with Organization Name ${body.getOrg_name}")
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
-			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
+			.toD("{{threescale.dest.url}}/admin/api/accounts/"
 					+ "${body.getId}/approve.xml")
 			.unmarshal(eventDataFormat)
 
@@ -122,8 +122,8 @@ public class WebHookRoute extends RouteBuilder {
 			.log("Account approved.")
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
-			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
+			.toD("{{threescale.dest.url}}/admin/api/accounts/"
 					+ "${body.getId}/users/"
 					+ "${body.getUserId}/activate.xml")
 			.log("Account user activated.")
@@ -142,18 +142,18 @@ public class WebHookRoute extends RouteBuilder {
 			.log("Retrieving additional info for application creation . . .")
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.source.api}}"))
-			.toD("{{3scale.source.url}}/admin/api/accounts/"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.source.api}}"))
+			.toD("{{threescale.source.url}}/admin/api/accounts/"
 					+ "${body.getObject.getApplication.getAccount_id}.xml")
 			.unmarshal(eventDataFormat)
 			
 //			Find Account id
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}&"
 					+ "username=${body.getUsers().get(0).getUsername()}&"
 					+ "email=${body.getUsers().get(0).getEmail()}"))
-			.to("{{3scale.dest.url}}/admin/api/accounts/find.xml")
+			.to("{{threescale.dest.url}}/admin/api/accounts/find.xml")
 			.unmarshal(eventDataFormat)
 //			Remember Account ID
 			.setHeader("AccountID", simple("${body.getId}"))
@@ -161,8 +161,8 @@ public class WebHookRoute extends RouteBuilder {
 //			Get Service
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.source.api}}"))
-			.toD("{{3scale.source.url}}/admin/api/services/"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.source.api}}"))
+			.toD("{{threescale.source.url}}/admin/api/services/"
 					+ "${header.ServiceID}.xml")
 			.unmarshal(eventDataFormat)
 			.setHeader("ServiceName", simple("${body.getSystem_name}"))
@@ -170,16 +170,16 @@ public class WebHookRoute extends RouteBuilder {
 //			Find Service ID
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
-			.to("{{3scale.dest.url}}/admin/api/services.xml")
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
+			.to("{{threescale.dest.url}}/admin/api/services.xml")
 			.unmarshal(eventDataFormat)
 			.process(findService)
 			
 //			Find Plan Id
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
-			.toD("{{3scale.dest.url}}/admin/api/services/"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
+			.toD("{{threescale.dest.url}}/admin/api/services/"
 					+ "${body.getId}/application_plans.xml")
 			.unmarshal(eventDataFormat)
 			.process(findPlan)
@@ -190,14 +190,14 @@ public class WebHookRoute extends RouteBuilder {
 			.log("Creating synced application . . .")
 			.removeHeaders("Camel*")
 			.setHeader(Exchange.HTTP_METHOD, constant("POST"))
-			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}&"
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}&"
 					+ "plan_id=${header.PlanID}&"
 					+ "name=${header.name}&"
 					+ "description=${header.description}&"
 					+ "application_id=${header.application_id}&"
 					+ "application_key=${header.application_key}"))
 			.setBody(simple("${null}"))
-			.toD("{{3scale.dest.url}}/admin/api/accounts/"
+			.toD("{{threescale.dest.url}}/admin/api/accounts/"
 					+ "${header.AccountID}/applications.xml")
 			.log("Application created and synced")
 		;	
