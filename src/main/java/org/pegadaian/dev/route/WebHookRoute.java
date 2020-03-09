@@ -37,22 +37,22 @@ public class WebHookRoute extends RouteBuilder {
 				.to("direct:webhookType")
 			;
 		
-//		from("timer:test?repeatCount=1")
-//			.log("Testing SSL to 3Scale JKT")
-//			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-//			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.source.api}}"))
-//			.to("{{3scale.source.url}}/admin/api/accounts.xml")
-//			.log("${headers}")
-//			.log("${body}")
-//			
-//			.log("Testing SSL to 3Scale SBY")
-//			.removeHeaders("Camel*")
-//			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
-//			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
-//			.to("{{3scale.dest.url}}/admin/api/accounts.xml")
-//			.log("${headers}")
-//			.log("${body}")
-//		;
+		from("timer:test?repeatCount=1")
+			.log("Testing SSL to 3Scale JKT")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.source.api}}"))
+			.to("{{3scale.source.url}}/admin/api/accounts.xml")
+			.log("${headers}")
+			.log("${body}")
+			
+			.log("Testing SSL to 3Scale SBY")
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{3scale.dest.api}}"))
+			.to("{{3scale.dest.url}}/admin/api/accounts.xml")
+			.log("${headers}")
+			.log("${body}")
+		;
 		
 		from("direct:webhookType").id("Content Based Router")
 			.unmarshal(eventDataFormat)
