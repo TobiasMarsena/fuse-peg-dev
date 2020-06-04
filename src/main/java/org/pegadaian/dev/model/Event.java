@@ -40,12 +40,12 @@ public class Event {
 		return object.getApplication().getApp_id();
 	}
 	public String getOrg_name() {
-		return object.getAccount().getOrg_name();
+		return object.getAccounts().getAccount().get(0).getOrg_name();
 	}
 	public String getUsername() {
-		return object.getAccount().getUsers().get(0).getUsername();
+		return object.getAccounts().getAccount().get(0).getUsers().get(0).getUsername();
 	}
 	public String getEmail() {
-		return object.getAccount().getUsers().get(0).getEmail();
+		return object.getAccounts().getAccount().get(0).getUsers().get(0).getEmail();
 	}	
 }

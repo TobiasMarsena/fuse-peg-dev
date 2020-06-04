@@ -7,6 +7,8 @@ import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.pegadaian.dev.model.Event;
+import org.pegadaian.dev.process.GetEmails;
+import org.pegadaian.dev.process.FindAccount;
 import org.pegadaian.dev.process.FindPlan;
 import org.pegadaian.dev.process.FindService;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,8 @@ public class WebHookRoute extends RouteBuilder {
 		
 		Processor findService = new FindService();
 		Processor findPlan = new FindPlan();
+		Processor findAccount = new FindAccount();
+		Processor getEmails = new GetEmails();
 		JAXBContext jaxbContext = JAXBContext.newInstance(Event.class);
 		JaxbDataFormat eventDataFormat = new JaxbDataFormat(jaxbContext);
 		
@@ -52,6 +56,8 @@ public class WebHookRoute extends RouteBuilder {
 			.to("{{threescale.dest.url}}/admin/api/accounts.xml")
 			.log("${headers}")
 			.log("${body}")
+			
+			.log("Fuse sync ready.")
 		;
 		
 		from("direct:webhookType").id("Content Based Router")
@@ -59,11 +65,43 @@ public class WebHookRoute extends RouteBuilder {
 			.choice()
 				.when().simple("${body.getType} == 'account' && ${body.getAction} == 'created'")
 					.to("direct:accountCreated")
+				.when().simple("${body.getType} == 'account' && ${body.getAction} == 'deleted'")
+					.to("direct:accountDeleted")
 				.when().simple("${body.getType} == 'application' && ${body.getAction} == 'created'")
 					.to("direct:appCreated")
+				.when().simple("${body.getType} == 'application' && ${body.getAction} == 'deleted'")
+					.to("direct:appDeleted")
 				.when().simple("${body.getType} == 'application' && ${body.getAction} == 'key_updated'")
 					.to("direct:keyUpdated")
 			.endChoice()
+		;
+		
+		from("direct:accountDeleted")
+//			Find Account Id
+			.log("Searching for Account to delete . . .")
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.source.api}}"))
+			.to("{{threescale.source.url}}/admin/api/accounts.xml")
+			.unmarshal(eventDataFormat)
+			.process(getEmails)
+			
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
+			.setBody(simple(null))
+			.to("{{threescale.dest.url}}/admin/api/accounts.xml")
+			.unmarshal(eventDataFormat)
+			.process(findAccount)
+			
+			.log("Account found. Deleting . . .")
+//			Delete Account
+			.removeHeaders("Camel*")
+			.setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
+			.toD("{{threescale.dest.url}}/admin/api/accounts/"
+					+ "${body.getId}.xml")
+			.log("Account deleted synchronously.")
 		;
 		
 		from("direct:keyUpdated")
@@ -201,5 +239,28 @@ public class WebHookRoute extends RouteBuilder {
 					+ "${header.AccountID}/applications.xml")
 			.log("Application created and synced")
 		;	
+		
+		from("direct:appDeleted")
+//		Find application
+		.log("Searching for application to delete . . .")
+		.removeHeaders("Camel*")
+		.setHeader(Exchange.HTTP_METHOD, constant("GET"))
+		.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}&"
+				+ "app_id=${body.getObject.getApplication.getApp_id}"))
+		.to("{{threescale.dest.url}}/admin/api/applications/find.xml")
+		.unmarshal(eventDataFormat)
+		.setHeader("AccountID", simple("${body.getAccount_id}"))
+		.setHeader("AppID", simple("${body.getId}"))
+		
+		.log("Application found. Deleting . . .")
+//		Delete application
+		.removeHeaders("Camel*")
+		.setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+		.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
+		.toD("{{threescale.dest.url}}/admin/api/accounts/"
+				+ "${body.getAccount_id}/applications/"
+				+ "${body.getId}.xml")
+		.log("Application deleted synchronously.")
+	;
 	}
 }
