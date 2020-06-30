@@ -14,7 +14,7 @@ public class FindAccount implements Processor{
 	public void process(Exchange exchange) throws Exception {
 		List<String> emailOfAccounts = (List<String>) exchange.getIn().getHeader("emailOfAccounts");
 		
-		List<Account> accounts = exchange.getIn().getBody(Accounts.class).getAccount();
+		List<Account> accounts = exchange.getIn().getBody(Accounts.class).getAccounts();
 		List<String> emails = new ArrayList<String>();
 		for (Account account : accounts) {
 			emails.add(account.getUsers().get(0).getEmail());

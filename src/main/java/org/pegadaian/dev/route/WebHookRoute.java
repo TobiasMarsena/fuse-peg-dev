@@ -6,11 +6,12 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
+import org.pegadaian.dev.model.Accounts;
 import org.pegadaian.dev.model.Event;
-import org.pegadaian.dev.process.GetEmails;
 import org.pegadaian.dev.process.FindAccount;
 import org.pegadaian.dev.process.FindPlan;
 import org.pegadaian.dev.process.FindService;
+import org.pegadaian.dev.process.GetEmails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,6 +26,9 @@ public class WebHookRoute extends RouteBuilder {
 		Processor getEmails = new GetEmails();
 		JAXBContext jaxbContext = JAXBContext.newInstance(Event.class);
 		JaxbDataFormat eventDataFormat = new JaxbDataFormat(jaxbContext);
+		JAXBContext jaxbContext2 = JAXBContext.newInstance(Accounts.class);
+		JaxbDataFormat accountsDataFormat = new JaxbDataFormat(jaxbContext2);
+		
 		
 		restConfiguration().apiContextPath("/openapi.json")
 			.component("restlet").contextPath("/webhook").port("8080").scheme("http")
@@ -40,6 +44,10 @@ public class WebHookRoute extends RouteBuilder {
 				.responseMessage().code(200).message("Webhook successfully processed").endResponseMessage()
 				.to("direct:webhookType")
 			;
+		
+		onException(Exception.class)
+			.maximumRedeliveries(0)
+		;
 		
 		from("timer:test?repeatCount=1")
 			.log("Testing SSL to 3Scale JKT")
@@ -83,7 +91,7 @@ public class WebHookRoute extends RouteBuilder {
 			.setHeader(Exchange.HTTP_METHOD, constant("GET"))
 			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.source.api}}"))
 			.to("{{threescale.source.url}}/admin/api/accounts.xml")
-			.unmarshal(eventDataFormat)
+			.unmarshal(accountsDataFormat)
 			.process(getEmails)
 			
 			.removeHeaders("Camel*")
@@ -91,7 +99,7 @@ public class WebHookRoute extends RouteBuilder {
 			.setHeader(Exchange.HTTP_QUERY, simple("access_token={{threescale.dest.api}}"))
 			.setBody(simple(null))
 			.to("{{threescale.dest.url}}/admin/api/accounts.xml")
-			.unmarshal(eventDataFormat)
+			.unmarshal(accountsDataFormat)
 			.process(findAccount)
 			
 			.log("Account found. Deleting . . .")

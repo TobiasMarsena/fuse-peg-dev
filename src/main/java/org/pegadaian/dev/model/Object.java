@@ -10,8 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Object {
 	@XmlElement(name = "application")
 	private App application;
-	@XmlElement(name = "accounts")
-	private Accounts accounts;
+	@XmlElement(name = "account")
+	private Account account;
 	@XmlElement(name = "services")
 	private Services services;
 	@XmlElement(name = "plans")
@@ -25,11 +25,11 @@ public class Object {
 	public void setApplication(App application) {
 		this.application = application;
 	}
-	public Accounts getAccounts() {
-		return accounts;
+	public Account getAccount() {
+		return account;
 	}
-	public void setAccounts(Accounts accounts) {
-		this.accounts = accounts;
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 	public Services getServices() {
 		return services;

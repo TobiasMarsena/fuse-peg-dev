@@ -12,11 +12,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Accounts {
 	@XmlElement(name = "account")
-	private List<Account> accounts = new ArrayList<>();
+	private List<Account> accounts = new ArrayList<Account>();
 
-	public List<Account> getAccount() {
+	public List<Account> getAccounts() {
 		return accounts;
 	}
+
 	public void setAccounts(List<Account> accounts) {
 		this.accounts = accounts;
 	}
