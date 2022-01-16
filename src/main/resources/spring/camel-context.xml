@@ -2,32 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans      http://www.springframework.org/schema/beans/spring-beans.xsd                  http://camel.apache.org/schema/spring                 http://camel.apache.org/schema/spring/camel-spring.xsd">
     <bean class="org.pegadaian.dev.ClientService" id="clientService" scope="singleton"/>
+    <bean class="org.pegadaian.dev.InsecureHTTP4Config" id="insecureHTTP4Config"/>
     <bean class="org.pegadaian.dev.model.Token" id="token" scope="singleton"/>
-    <bean class="org.pegadaian.dev.HostnameVerifier"
-        id="hostnameVerifier" scope="singleton"/>
-    <sslContextParameters id="ssl-jkt" xmlns="http://camel.apache.org/schema/spring">
-        <keyManagers keyPassword="welcome2019">
-            <keyStore password="welcome2019" resource="ocpjakarta.jks"/>
-        </keyManagers>
-        <trustManagers>
-            <keyStore password="welcome2019" resource="ocpjakarta.jks"/>
-        </trustManagers>
-    </sslContextParameters>
-    <bean class="org.apache.camel.component.http4.HttpComponent" id="http-jkt">
-        <property name="sslContextParameters" ref="ssl-jkt"/>
-        <property name="x509HostnameVerifier" ref="hostnameVerifier"/>
-    </bean>
-    <sslContextParameters id="ssl-sby" xmlns="http://camel.apache.org/schema/spring">
-        <keyManagers keyPassword="welcome2019">
-            <keyStore password="welcome2019" resource="ocpsurabaya.jks"/>
-        </keyManagers>
-        <trustManagers>
-            <keyStore password="welcome2019" resource="ocpsurabaya.jks"/>
-        </trustManagers>
-    </sslContextParameters>
-    <bean class="org.apache.camel.component.http4.HttpComponent" id="http-sby">
-        <property name="sslContextParameters" ref="ssl-sby"/>
-        <property name="x509HostnameVerifier" ref="hostnameVerifier"/>
-    </bean>
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring"/>
 </beans>

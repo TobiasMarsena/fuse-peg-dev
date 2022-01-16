@@ -4,6 +4,7 @@ target
 *.im
 *.ipr
 *.iws
+.gitignore
 overlays
 .DS_Store
 .settings
@@ -11,6 +12,7 @@ overlays
 *.log
 .project
 .classpath
+.sts4-cache
 *.fmd
 .cache
 dependency-reduced-pom.xml
