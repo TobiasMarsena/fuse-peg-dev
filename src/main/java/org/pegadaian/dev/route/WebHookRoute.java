@@ -43,10 +43,20 @@ public class WebHookRoute extends RouteBuilder {
 				.description("Content Based webhook to integrate 3Scale JKT to SBY")
 				.responseMessage().code(200).message("Webhook successfully processed").endResponseMessage()
 				.to("direct:webhookType")
+			.path("/ping")
+			.get().id("ping-webhook")
+				.description("Ping endpoint")
+				.responseMessage().code(200).message("Ping Successful").endResponseMessage()
+				.to("direct:ping")
 			;
 		
 		onException(Exception.class)
 			.maximumRedeliveries(0)
+		;
+		
+		from("direct:ping")
+			.setBody(simple("PONG"))
+			.log("${body}")
 		;
 		
 		from("timer:test?repeatCount=1")
